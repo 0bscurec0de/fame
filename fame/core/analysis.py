@@ -148,7 +148,7 @@ class Analysis(MongoDict):
 
         # If this is the first time we are adding this IOC, lookup Threat Intelligence data
         if r.modified_count == 1:
-            ti_tags, ti_indicators = self._lookup_ioc(value)
+            ti_tags, ti_indicators = self._lookup_ioc(value, tags)
             # If we have Threat Intelligence data, enrich analysis
             if ti_tags:
                 self.collection.update_one({'_id': self['_id'], 'iocs.value': value},
@@ -302,13 +302,13 @@ class Analysis(MongoDict):
             except Exception, e:
                 self.log('error', "error in reporting module '{0}': {1}".format(module.name, e))
 
-    def _lookup_ioc(self, ioc):
+    def _lookup_ioc(self, ioc, tags):
         ti_tags = []
         ti_indicators = []
 
         for module in dispatcher.get_threat_intelligence_modules():
             try:
-                tags, indicators = module.ioc_lookup(ioc)
+                tags, indicators = module.ioc_lookup(ioc, tags)
                 ti_tags += tags
                 ti_indicators += indicators
             except Exception, e:

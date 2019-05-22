@@ -847,11 +847,12 @@ class ReportingModule(Module):
 class ThreatIntelligenceModule(Module):
     """Base class for Threat Intelligence Modules"""
 
-    def ioc_lookup(self, ioc):
+    def ioc_lookup(self, ioc, tags):
         """To implement. Perform an IOC lookup to enrich analysis.
 
         Args:
             ioc (string): the IOC value to look for.
+            tags (list): the list of tags associated to the IOC before looking at the TI platform.
 
         Returns:
             A tuple (tags, indicators).
